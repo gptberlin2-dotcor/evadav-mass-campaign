@@ -145,6 +145,112 @@
           </div>
         </div>
         <div id="summary" class="summary"></div>
+        <div class="api-card">
+          <h3>Hubungkan Akun Adviser EvaDav</h3>
+          <p class="section__hint">
+            Login adviser untuk mengambil token otomatis dari EvaDav.
+          </p>
+          <div class="form-grid api-grid">
+            <label>
+              Auth Base URL
+              <input
+                type="url"
+                id="auth-url"
+                placeholder="https://api.evadav.com/v1"
+              />
+            </label>
+            <label>
+              Auth Endpoint
+              <input type="text" id="auth-endpoint" value="/auth/login" />
+            </label>
+            <label>
+              Email Adviser
+              <input type="email" id="auth-email" placeholder="email@evadav" />
+            </label>
+            <label>
+              Password Adviser
+              <input type="password" id="auth-password" />
+            </label>
+            <label>
+              Token Field
+              <input type="text" id="auth-token-key" value="token" />
+              <span class="helper"
+                >Isi sesuai nama field token pada respons API.</span
+              >
+            </label>
+            <button class="primary full" type="button" id="connect-account">
+              Hubungkan Akun
+            </button>
+          </div>
+          <div id="auth-status" class="api-status">
+            Status koneksi akun akan muncul di sini.
+          </div>
+        </div>
+        <div class="api-card">
+          <h3>Kirim ke EvaDav API</h3>
+          <p class="section__hint">
+            Hubungkan campaign yang sudah dibuat ke API EvaDav agar langsung
+            terbentuk di dashboard.
+          </p>
+          <p class="section__hint">
+            Referensi dokumentasi:
+            <a class="doc-link" href="https://evadavapi.com/docs/api"
+              >https://evadavapi.com/docs/api</a
+            >
+          </p>
+          <div class="form-grid api-grid">
+            <label>
+              API Base URL
+              <input
+                type="url"
+                id="api-url"
+                placeholder="https://evadavapi.com"
+                value="https://evadavapi.com"
+              />
+            </label>
+            <label>
+              API Key / Token
+              <input
+                type="password"
+                id="api-key"
+                placeholder="Masukkan API token"
+              />
+              <span class="helper"
+                >Gunakan API token dari dashboard EvaDav.</span
+              >
+            </label>
+            <label>
+              Endpoint Campaign
+              <input type="text" id="api-endpoint" value="/campaigns" />
+            </label>
+            <label>
+              Dry Run
+              <select id="api-dry-run">
+                <option value="true">Aktif (tidak membuat campaign)</option>
+                <option value="false">Nonaktif</option>
+              </select>
+              <span class="helper"
+                >Gunakan jika API mendukung mode simulasi.</span
+              >
+            </label>
+            <label>
+              Kirim Mode
+              <select id="api-mode">
+                <option value="bulk">Bulk (1 request)</option>
+                <option value="single">Satu per campaign</option>
+              </select>
+            </label>
+            <button class="primary full" type="button" id="send-api">
+              Kirim Campaign ke API
+            </button>
+            <button class="ghost full" type="button" id="test-connection">
+              Uji Koneksi Bulk
+            </button>
+          </div>
+          <div id="api-status" class="api-status">
+            Status pengiriman akan muncul di sini.
+          </div>
+        </div>
         <div class="table-wrap">
           <table>
             <thead>
