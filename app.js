@@ -27,6 +27,9 @@ const TEMPLATE_KEY = "evadav-campaign-template";
 let latestCampaigns = [];
 let isBulkVerified = false;
 
+const TEMPLATE_KEY = "evadav-campaign-template";
+let latestCampaigns = [];
+
 const extractLinks = (text) =>
   text
     .split(/\n+/)
@@ -397,3 +400,6 @@ connectAccountButton.addEventListener("click", connectAccount);
 loadTemplate();
 renderCampaigns([]);
 resetBulkVerification();
+
+loadTemplate();
+renderCampaigns([]);
