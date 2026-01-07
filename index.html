@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EvaDav Campaign Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero__content">
+        <p class="hero__badge">EvaDav Mass Campaign</p>
+        <h1>Bangun banyak campaign hanya dengan satu konfigurasi.</h1>
+        <p>
+          Berikan daftar link sekali, simpan pengaturan standar, lalu
+          generate campaign secara masal tanpa mengulang setting untuk setiap
+          campaign.
+        </p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>1. Pengaturan Campaign</h2>
+        <p class="section__hint">
+          Semua pengaturan di bawah akan digunakan untuk setiap link yang kamu
+          masukkan.
+        </p>
+        <form id="settings-form" class="form-grid">
+          <label>
+            Nama Campaign Template
+            <input
+              type="text"
+              name="campaignName"
+              placeholder="Campaign {{index}} - {{domain}}"
+              value="Campaign {{index}} - {{domain}}"
+              required
+            />
+            <span class="helper"
+              >Gunakan {{index}}, {{domain}}, atau {{date}} untuk otomatis.</span
+            >
+          </label>
+          <label>
+            Advertising Format
+            <select name="format">
+              <option>Popunder</option>
+              <option>Banner</option>
+              <option>Video</option>
+            </select>
+          </label>
+          <label>
+            Pricing Model
+            <select name="pricing">
+              <option>Smart CPM</option>
+              <option>CPM</option>
+              <option>CPC</option>
+            </select>
+          </label>
+          <label>
+            Campaign Group
+            <input type="text" name="group" placeholder="Mis. Edukasi" />
+          </label>
+          <label>
+            Frequency Capping (per hari)
+            <input type="number" name="frequency" min="1" value="2" />
+          </label>
+          <label>
+            Conversion Postback URL
+            <input
+              type="url"
+              name="postback"
+              placeholder="https://evadav.com/phpb?goal=1&click_id={CLICKID}&payout={PAYOUT}"
+            />
+          </label>
+          <label class="full">
+            Targeting Negara
+            <input
+              type="text"
+              name="countries"
+              placeholder="Philippines, Singapore, Thailand"
+            />
+          </label>
+          <label>
+            Device
+            <select name="device">
+              <option>Mobile</option>
+              <option>Desktop</option>
+              <option>All</option>
+            </select>
+          </label>
+          <label>
+            CPM Default
+            <input type="number" name="cpm" step="0.01" value="0.51" />
+          </label>
+          <label>
+            Daily Impression Limit
+            <input type="number" name="dailyImpressions" value="0" />
+          </label>
+          <label>
+            Total Impression Limit
+            <input type="number" name="totalImpressions" value="3500" />
+          </label>
+          <label class="full">
+            Catatan Internal
+            <textarea
+              name="notes"
+              rows="3"
+              placeholder="Catatan untuk tim adviser agar konsisten"
+            ></textarea>
+          </label>
+          <button class="primary full" type="button" id="save-template">
+            Simpan Template
+          </button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>2. Daftar Link Campaign</h2>
+        <p class="section__hint">
+          Masukkan banyak link sekaligus (satu link per baris). Sistem akan
+          membuat campaign untuk setiap link.
+        </p>
+        <textarea
+          id="link-list"
+          rows="8"
+          placeholder="https://contoh.com/landing-1\nhttps://contoh.com/landing-2"
+        ></textarea>
+        <div class="actions">
+          <button class="primary" id="generate">Generate Campaign</button>
+          <button class="ghost" id="clear">Bersihkan</button>
+        </div>
+      </section>
+
+      <section class="card" id="result-card">
+        <div class="result-header">
+          <div>
+            <h2>3. Hasil Campaign</h2>
+            <p class="section__hint">
+              Gunakan hasil ini untuk input massal atau kirim ke tim ops.
+            </p>
+          </div>
+          <div class="result-actions">
+            <button class="ghost" id="copy-json">Copy JSON</button>
+            <button class="ghost" id="download-csv">Download CSV</button>
+          </div>
+        </div>
+        <div id="summary" class="summary"></div>
+        <div class="api-card">
+          <h3>Hubungkan Akun Adviser EvaDav</h3>
+          <p class="section__hint">
+            Login adviser untuk mengambil token otomatis dari EvaDav.
+          </p>
+          <div class="form-grid api-grid">
+            <label>
+              Auth Base URL
+              <input
+                type="url"
+                id="auth-url"
+                placeholder="https://api.evadav.com/v1"
+              />
+            </label>
+            <label>
+              Auth Endpoint
+              <input type="text" id="auth-endpoint" value="/auth/login" />
+            </label>
+            <label>
+              Email Adviser
+              <input type="email" id="auth-email" placeholder="email@evadav" />
+            </label>
+            <label>
+              Password Adviser
+              <input type="password" id="auth-password" />
+            </label>
+            <label>
+              Token Field
+              <input type="text" id="auth-token-key" value="token" />
+              <span class="helper"
+                >Isi sesuai nama field token pada respons API.</span
+              >
+            </label>
+            <button class="primary full" type="button" id="connect-account">
+              Hubungkan Akun
+            </button>
+          </div>
+          <div id="auth-status" class="api-status">
+            Status koneksi akun akan muncul di sini.
+          </div>
+        </div>
+        <div class="api-card">
+          <h3>Kirim ke EvaDav API</h3>
+          <p class="section__hint">
+            Hubungkan campaign yang sudah dibuat ke API EvaDav agar langsung
+            terbentuk di dashboard.
+          </p>
+          <p class="section__hint">
+            Referensi dokumentasi:
+            <a class="doc-link" href="https://evadavapi.com/docs/api"
+              >https://evadavapi.com/docs/api</a
+            >
+          </p>
+          <div class="form-grid api-grid">
+            <label>
+              API Base URL
+              <input
+                type="url"
+                id="api-url"
+                placeholder="https://evadavapi.com"
+                value="https://evadavapi.com"
+              />
+            </label>
+            <label>
+              API Key / Token
+              <input
+                type="password"
+                id="api-key"
+                placeholder="Masukkan API token"
+              />
+              <span class="helper"
+                >Gunakan API token dari dashboard EvaDav.</span
+              >
+            </label>
+            <label>
+              Endpoint Campaign
+              <input type="text" id="api-endpoint" value="/campaigns" />
+            </label>
+            <label>
+              Dry Run
+              <select id="api-dry-run">
+                <option value="true">Aktif (tidak membuat campaign)</option>
+                <option value="false">Nonaktif</option>
+              </select>
+              <span class="helper"
+                >Gunakan jika API mendukung mode simulasi.</span
+              >
+            </label>
+            <label>
+              Kirim Mode
+              <select id="api-mode">
+                <option value="bulk">Bulk (1 request)</option>
+                <option value="single">Satu per campaign</option>
+              </select>
+            </label>
+            <button class="primary full" type="button" id="send-api">
+              Kirim Campaign ke API
+            </button>
+            <button class="ghost full" type="button" id="test-connection">
+              Uji Koneksi Bulk
+            </button>
+          </div>
+          <div id="api-status" class="api-status">
+            Status pengiriman akan muncul di sini.
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Campaign</th>
+                <th>Target URL</th>
+                <th>Group</th>
+                <th>Format</th>
+                <th>Pricing</th>
+                <th>Negara</th>
+                <th>CPM</th>
+              </tr>
+            </thead>
+            <tbody id="campaign-table"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        © 2026 EvaDav Mass Campaign • dibuat untuk mempercepat kerja adviser.
+      </p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
